@@ -12,7 +12,26 @@ if ($_POST["password"] !== $_POST["password_confirmation"]) {
 }
 
 $password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
-var_dump($password_hash);
+$mysqli = require __DIR__ . "/database.php";
 
-print_r($_POST);
+$sql = "INSERT INTO user (username, password)
+        VALUES (?, ?)";
+
+$stmt = $mysqli->stmt_init();
+if (! $stmt->prepare($sql) ) {
+    die("SQL error: " . $mysqli->error);
+}
+
+$stmt->bind_param("ss", $_POST["name"], $password_hash);
+
+if ($stmt->execute()) {
+    print_r("Registered");
+} else {
+    if ($mysqli->errno === 1062) {
+        die("Username already exists");
+    } else {
+        die($mysqli->error . " " . $mysqli->errno);
+    }
+}
+
 ?>
