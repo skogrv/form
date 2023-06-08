@@ -25,7 +25,7 @@ if (!$stmt->prepare($sql)) {
 $stmt->bind_param("ss", $_POST["name"], $password_hash);
 
 if ($stmt->execute()) {
-    header("Location: ../home.html");
+    header("Location: ../index.php");
     exit;
 } else {
     if ($mysqli->errno === 1062) {
