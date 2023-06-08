@@ -25,6 +25,14 @@ if (!$stmt->prepare($sql)) {
 $stmt->bind_param("ss", $_POST["name"], $password_hash);
 
 if ($stmt->execute()) {
+    session_start();
+    $sql = sprintf("SELECT id FROM user
+            WHERE username = '%s'",
+        $mysqli->real_escape_string($_POST["name"])
+    );
+    $result = $mysqli->query($sql);
+    $user = $result->fetch_assoc(); 
+    $_SESSION["user_id"] = $user["id"];
     header("Location: ../index.php");
     exit;
 } else {
